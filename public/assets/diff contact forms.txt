@@ -1,0 +1,7 @@
+ <i class="fa fa-envelope-o fa-2x"></i>
+        <p>info@companyname.com</p>
+       
+       <br/> 
+	  <i class="fa fa-phone fa-2x"></i>
+        <p> +1 235 123 1234</p>
+       

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Connecting people to local resources">
+  <meta name="author" content="ShelterLink Team">
+  <title>ShelterLink</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="assets/css/bootstrap.css" rel="stylesheet">
+  <!-- Custom CSS -->
+  <link href="assets/css/styles.css" rel="stylesheet">
+  <link href="assets/css/font-awesome.min.css" rel="stylesheet">
+  <link href="assets/css/animate-custom.css" rel="stylesheet"> 
+  <script src="assets/js/jquery.min.js"></script>
+  <script src="assets/js/modernizr.custom.js"></script>
+
+  <!-- Leaflet CSS for Map -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  
+</head>
+<body data-target="#navbar-main">
+<div id="navbar-main"> 
+  <!-- Fixed navbar -->
+  <div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <div class="pull-left logo">
+          <a href="#home"><img src="assets/img/transparent_logo2.png" alt="ShelterLink Logo"></a>
+        </div>
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"> 
+          <span class="icon-bar"></span> 
+          <span class="icon-bar"></span> 
+          <span class="icon-bar"></span> 
+        </button>
+      </div>
+      <div class="navbar-collapse collapse">
+        <ul class="nav navbar-nav pull-right">
+          <li><a href="#home-section" class="smoothScroll">Welcome</a></li>
+          <li><a href="#WhatWeDo" class="smoothScroll">What We Do</a></li>
+          <li><a href="#services" class="smoothScroll">What We Offer</a></li>    
+          <li><a href="#team" class="smoothScroll">Our Team</a></li>
+          <li><a href="#map-section" class="smoothScroll">Find Resources</a></li>
+          <li><a href="#contact" class="smoothScroll">Get In Touch</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HEADER SECTION -->
+<div id="home-section">
+  <div id="headerwrap" name="home">
+    <header class="clearfix tb"> 
+      <div class="tb-cell text-center">
+        <i class="fa fa-heart-o icon"></i>
+        <h1>ShelterLink</h1>
+        <p>Helping Those Who Help Others!</p>
+        <a href="#WhatWeDo" class="smoothScroll btn btn-lg">Get Started</a> 
+      </div>
+    </header>
+  </div>
+</div>
+
+<!-- ABOUT SECTION -->
+<div id="WhatWeDo" name="about">
+  <div class="container">
+    <div class="row white">
+      <h2 class="centered">WHAT WE DO</h2>
+      <hr>
+      <div class="col-md-6">
+        <img class="img-responsive" src="assets/img/about/oldman2.png" style="width: 72%;" alt="Old Man Image">
+      </div>
+      <div class="col-md-6">
+        <h3>How we help</h3>
+        <p>We’ve partnered with local organizations to compile a database of homeless resources in Durham, providing easy access to services like shelter, food, and healthcare.</p>
+        <h3>How does it work?</h3>
+        <p>In just three clicks, you can connect with local resources for immediate assistance.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MAP SECTION -->
+<div id="map-section" class="container">
+  <h2 class="centered">Find Resources Near You</h2>
+  <div id="map" style="height: 500px;"></div>
+</div>
+
+<!-- LEAFLET MAP SCRIPT -->
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script>
+  // Initialize the map centered on Durham, NC
+  var map = L.map('map').setView([36.0014, -78.9382], 13);
+  
+  // Add a tile layer
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 18,
+    attribution: '© OpenStreetMap'
+  }).addTo(map);
+
+  // Function to load resource markers
+  async function loadResourceMarkers() {
+    try {
+      const response = await fetch('/api/resources'); // Backend endpoint
+      const data = await response.json();
+      
+      data.forEach(resource => {
+        const marker = L.marker([resource.latitude, resource.longitude]).addTo(map);
+        marker.bindPopup(`<b>${resource.name}</b><br>${resource.description}`);
+      });
+    } catch (error) {
+      console.error('Error loading resources:', error);
+    }
+  }
+
+  loadResourceMarkers();
+</script>
+
+<!-- Additional Sections (Team, Contact, etc.) -->
+<div id="team" name="team">
+  <div class="container">
+    <div class="row centered">
+      <h2 class="centered">Meet Our Team</h2>
+      <hr>
+      <div class="col-lg-8 col-lg-offset-2 centered">
+        <p>Our team is a group of Senior Students from North Carolina Central University.</p>
+      </div>
+      <!-- Team Member Profiles -->
+      <div class="col-lg-3 centered"> 
+        <h4><strong>Matthew Swepson</strong></h4>
+        <p>Team Member Description</p>
+        <a href="#"><i class="fa fa-linkedin"></i></a> 
+      </div>
+      <!-- Repeat similar blocks for other team members -->
+    </div>
+  </div>
+</div>
+
+<div id="contact" name="contact">
+  <div class="container">
+    <h2 class="centered">Get In Touch</h2>
+    <form id="contact-form" method="post" action="/contact">
+      <input type="text" name="name" placeholder="Name" required>
+      <input type="email" name="email" placeholder="Email" required>
+      <textarea name="message" placeholder="Message"></textarea>
+      <button type="submit">Send Message</button>
+    </form>
+  </div>
+</div>
+
+<!-- JavaScript Files -->
+<script src="assets/js/bootstrap.min.js"></script>
+<script src="assets/js/smoothscroll.js"></script>
+</body>
+</html>
