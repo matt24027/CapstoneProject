@@ -18,9 +18,9 @@
 
   <!-- Leaflet CSS for Map -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-  
 </head>
 <body data-target="#navbar-main">
+
 <div id="navbar-main"> 
   <!-- Fixed navbar -->
   <div class="navbar navbar-inverse navbar-fixed-top">
@@ -37,12 +37,11 @@
       </div>
       <div class="navbar-collapse collapse">
         <ul class="nav navbar-nav pull-right">
-          <li><a href="#home-section" class="smoothScroll">Welcome</a></li>
-          <li><a href="#WhatWeDo" class="smoothScroll">What We Do</a></li>
-          <li><a href="#services" class="smoothScroll">What We Offer</a></li>    
-          <li><a href="#team" class="smoothScroll">Our Team</a></li>
-          <li><a href="#map-section" class="smoothScroll">Find Resources</a></li>
-          <li><a href="#contact" class="smoothScroll">Get In Touch</a></li>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="our-mission.html">Our Mission</a></li>
+          <li><a href="our-team.html">Our Team</a></li>
+          <li><a href="find-resources.html">Find Resources</a></li>
+          <li><a href="get-in-touch.html">Get In Touch</a></li>
         </ul>
       </div>
     </div>
@@ -74,7 +73,7 @@
       <h2 class="centered">WHAT WE DO</h2>
       <hr>
       <div class="col-md-6">
-        <img class="img-responsive" src="assets/img/about/oldman2.png" style="width: 72%;" alt="Old Man Image">
+        <img class="img-responsive" src="assets/img/about/donation.png" style="width: 72%;" alt="Donation Image">
       </div>
       <div class="col-md-6">
         <h3>How we help</h3>
@@ -95,53 +94,111 @@
 <!-- LEAFLET MAP SCRIPT -->
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <script>
-  // Initialize the map centered on Durham, NC
-  var map = L.map('map').setView([36.0014, -78.9382], 13);
-  
-  // Add a tile layer
+  // Initialize the map
+  var map = L.map('map').setView([35.9932689, -78.8957218], 13); // Centered on Durham, NC
+
+  // Add tile layer
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 18,
-    attribution: '© OpenStreetMap'
+    attribution: '© OpenStreetMap contributors'
   }).addTo(map);
 
-  // Function to load resource markers
+  // Load markers from the API
   async function loadResourceMarkers() {
     try {
-      const response = await fetch('/api/resources'); // Backend endpoint
-      const data = await response.json();
-      
-      data.forEach(resource => {
+      const response = await fetch('/api/resources');
+      const resources = await response.json();
+
+      resources.forEach(resource => {
         const marker = L.marker([resource.latitude, resource.longitude]).addTo(map);
         marker.bindPopup(`<b>${resource.name}</b><br>${resource.description}`);
+        marker.bindTooltip(`${resource.name}<br>${resource.address || ''}`, {
+          permanent: false,
+          direction: "top"
+        });
       });
     } catch (error) {
       console.error('Error loading resources:', error);
     }
   }
 
+  // Add current location marker
+  function showCurrentLocation() {
+    map.locate({ setView: true, maxZoom: 16 });
+    map.on('locationfound', (e) => {
+      const radius = e.accuracy / 2;
+      L.circle(e.latlng, radius).addTo(map);
+      L.marker(e.latlng).addTo(map).bindPopup('You are here!').openPopup();
+    });
+    map.on('locationerror', (e) => {
+      alert('Could not determine your location. Please ensure location services are enabled.');
+    });
+  }
+
+  // Call the functions
   loadResourceMarkers();
+  showCurrentLocation();
+
+  // Smooth scroll for links with class 'smoothScroll'
+  document.querySelectorAll('a.smoothScroll').forEach(link => {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      const targetId = this.getAttribute('href').substring(1);
+      const targetElement = document.getElementById(targetId);
+      if (targetElement) {
+        window.scrollTo({
+          top: targetElement.offsetTop - 60,
+          behavior: 'smooth'
+        });
+      }
+    });
+  });
 </script>
 
-<!-- Additional Sections (Team, Contact, etc.) -->
+<!-- TEAM SECTION -->
 <div id="team" name="team">
   <div class="container">
     <div class="row centered">
       <h2 class="centered">Meet Our Team</h2>
       <hr>
       <div class="col-lg-8 col-lg-offset-2 centered">
-        <p>Our team is a group of Senior Students from North Carolina Central University.</p>
+        <p>Our team is composed of a group of Senior Students from North Carolina Central University.</p>
       </div>
-      <!-- Team Member Profiles -->
       <div class="col-lg-3 centered"> 
         <h4><strong>Matthew Swepson</strong></h4>
-        <p>Team Member Description</p>
+        <p>Project Manager / Back End Developer</p>
         <a href="#"><i class="fa fa-linkedin"></i></a> 
       </div>
-      <!-- Repeat similar blocks for other team members -->
+      <div class="col-lg-3 centered"> 
+        <h4><strong>Randolph Esquivel-Saucedo</strong></h4>
+        <p>Head Developer</p>
+        <a href="#"><i class="fa fa-linkedin"></i></a> 
+      </div>
+      <div class="col-lg-3 centered"> 
+        <h4><strong>Xzayvier Jones</strong></h4>
+        <p>UI Designer/ Front End Developer</p>
+        <a href="#"><i class="fa fa-linkedin"></i></a> 
+      </div>
+      <div class="col-lg-3 centered"> 
+        <h4><strong>Omari Bethea</strong></h4>
+        <p>Quality Assurance Engineer</p>
+        <a href="#"><i class="fa fa-linkedin"></i></a> 
+      </div>
+      <div class="col-lg-3 centered"> 
+        <h4><strong>Mykah Stone</strong></h4>
+        <p>Outreach Coordinator / Co Database Administrator</p>
+        <a href="#"><i class="fa fa-linkedin"></i></a> 
+      </div>
+      <div class="col-lg-3 centered"> 
+        <h4><strong>Josh Pullen</strong></h4>
+        <p>Database Administrator</p>
+        <a href="#"><i class="fa fa-linkedin"></i></a> 
+      </div>
     </div>
   </div>
 </div>
 
+<!-- CONTACT SECTION -->
 <div id="contact" name="contact">
   <div class="container">
     <h2 class="centered">Get In Touch</h2>
