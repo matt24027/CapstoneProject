@@ -250,18 +250,24 @@ a:before, a:after {
 	padding-bottom: 100px;
 }
 #headerwrap h1 {
-	color: #ffffff;
-	font-size: 50px;
-	font-weight: 400;
-	text-align: center;
-	letter-spacing: 3px;
+    color: white;
+    background-color: #e89a2f; /* Full-width background */
+    padding: 10px; /* Adds space around the text */
+    font-size: 50px;
+    font-weight: 400;
+    text-align: center;
+    letter-spacing: 3px;
 }
+
 #headerwrap p {
-	color: #fff;
-	font-size: 22px;
-	font-weight: 300;
-	text-align: center;
-	letter-spacing: 1px;
+    color: white;
+    background-color: black; /* Add a black background */
+    display: inline-block; /* Ensures proper wrapping */
+    padding: 5px; /* Adds space around the text */
+    font-size: 22px;
+    font-weight: 300;
+    text-align: center;
+    letter-spacing: 1px;
 }
 #headerwrap .icon {
 	color: #ffffff;
