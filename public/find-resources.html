@@ -45,24 +45,122 @@
 
 <!-- MAP SECTION -->
 
-<div id="map-section" class="container">
-  <h2 class="centered">Find Resources Near You</h2>
-  <div id="map" style="height: 500px;"></div>
+<div id="map-section" class="container" style="margin-bottom: 100px;">
+  <h2 class="centered" style="margin-top: 20%; padding-bottom: 5%;">Find Resources Near You</h2>
+  <div id="map" style="height: 700px; padding-bottom: 100px; border: 5px solid #ccc; border-radius: 10px;"></div>
 </div>
+
+
+<!-- Resource List -->
+<div style="margin-top: 30px; padding-bottom: 50px;">
+  <h2 class="centered">All Available Resources</h2>
+
+  <!-- Homelessness and Housing Nonprofits -->
+  <div style="margin-left: 30px; padding-bottom: 5%; padding-top: 3%;">
+    <h4>Homelessness and Housing Nonprofits</h4>
+    <ul>
+      <li><strong>Habitat for Humanity</strong>
+        <ul>
+          <li>215 N Church St, Durham, NC 27701</li>
+          <li>5501 Durham Chapel Hill Blvd, Durham, NC 27707</li>
+        </ul>
+      </li>
+      <li><strong>North Carolina Housing Coalition</strong>:  
+        3608 University Dr Ste 203, Durham, NC 27707  
+      </li>
+      <li><strong>The Salvation Army of Durham</strong>:  
+        909 Liberty St, Durham, NC 27701  
+      </li>
+      <li><strong>Durham Rescue Mission</strong>:  
+        1201 East Main Street, Durham, NC 27701  
+      </li>
+    </ul>
+  </div>
+
+  <!-- Food Assistance Nonprofits -->
+  <div style="margin-left: 30px; padding-bottom: 5%;">
+    <h4>Food Assistance Nonprofits</h4>
+    <ul>
+      <li><strong>Feeding Durham Together</strong>:  
+        3333 Durham-Chapel Hill Blvd, A100, Durham, NC 27707  
+      </li>
+      <li><strong>Meals on Wheels of Durham</strong>:  
+        2522 Ross Road, Durham, NC 27703  
+      </li>
+      <li><strong>End Hunger Durham</strong>:  
+        504 W. Chapel Hill Street, Durham, NC 27701  
+      </li>
+      <li><strong>Urban Ministries of Durham</strong>:  
+        410 Liberty St, Durham, NC 27701  
+      </li>
+    </ul>
+  </div>
+
+  <!-- Faith-Based Nonprofits -->
+  <div style="margin-left: 30px; padding-bottom: 5%;">
+    <h4>Faith-Based Nonprofits</h4>
+    <ul>
+      <li><strong>Durham Congregations in Action</strong>:  
+        504 W. Chapel Hill St #205, Durham, NC 27701  
+      </li>
+      <li><strong>Interfaith Food Shuttle</strong>:  
+        1001 Blair Dr, Raleigh, NC 27603  
+      </li>
+    </ul>
+  </div>
+
+  <!-- Healthcare Nonprofits -->
+  <div style="margin-left: 30px; padding-bottom: 5%;">
+    <h4>Healthcare Nonprofits</h4>
+    <ul>
+      <li><strong>Lincoln Community Health Center</strong>:  
+        1301 Fayetteville St, Durham, NC 27707  
+      </li>
+      <li><strong>Project Access of Durham County</strong>:  
+        715 Broad St Suite 101, Durham, NC 27705  
+      </li>
+    </ul>
+  </div>
+
+  <!-- Domestic Violence Shelters -->
+  <div style="margin-left: 30px; padding-bottom: 5%;">
+    <h4>Domestic Violence Shelters</h4>
+    <ul>
+      <li><strong>Durham Crisis Response Center</strong>:  
+        206 North Dillard Street, Durham, NC 27701  
+      </li>
+    </ul>
+  </div>
+
+  <!-- Veterans Services Nonprofits -->
+  <div style="margin-left: 30px; padding-bottom: 5%;">
+    <h4>Veterans Services Nonprofits</h4>
+    <ul>
+      <li><strong>Veterans Affairs Community Resource and Referral Center</strong>:  
+        1335 Western Blvd, Raleigh, NC 27606  
+      </li>
+    </ul>
+  </div>
+
 
 <!-- LEAFLET MAP SCRIPT -->
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <script>
-  var map = L.map('map').setView([35.9932689, -78.8957218], 13);
+  // Initialize the map
+  var map = L.map('map').setView([35.9932689, -78.8957218], 13); // Centered on Durham, NC
+
+  // Add tile layer
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 18,
     attribution: '© OpenStreetMap contributors'
   }).addTo(map);
 
+  // Load markers from the API
   async function loadResourceMarkers() {
     try {
       const response = await fetch('/api/resources');
       const resources = await response.json();
+
       resources.forEach(resource => {
         const marker = L.marker([resource.latitude, resource.longitude]).addTo(map);
         marker.bindPopup(`<b>${resource.name}</b><br>${resource.description}`);
@@ -76,8 +174,39 @@
     }
   }
 
+  // Add current location marker
+  function showCurrentLocation() {
+    map.locate({ setView: true, maxZoom: 16 });
+    map.on('locationfound', (e) => {
+      const radius = e.accuracy / 2;
+      L.circle(e.latlng, radius).addTo(map);
+      L.marker(e.latlng).addTo(map).bindPopup('You are here!').openPopup();
+    });
+    map.on('locationerror', (e) => {
+      alert('Could not determine your location. Please ensure location services are enabled.');
+    });
+  }
+
+  // Call the functions
   loadResourceMarkers();
+  showCurrentLocation();
+
+  // Smooth scroll for links with class 'smoothScroll'
+  document.querySelectorAll('a.smoothScroll').forEach(link => {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      const targetId = this.getAttribute('href').substring(1);
+      const targetElement = document.getElementById(targetId);
+      if (targetElement) {
+        window.scrollTo({
+          top: targetElement.offsetTop - 60,
+          behavior: 'smooth'
+        });
+      }
+    });
+  });
 </script>
+
 
 <!-- JavaScript Files -->
 <script src="assets/js/bootstrap.min.js"></script>

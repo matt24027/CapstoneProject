@@ -621,4 +621,9 @@ margin: 10px auto;
 #team img{
 margin-top:30px;
 }
+
+#map-wrapper {
+	padding-bottom: 50px; /* Add space below */
+  }
+
 }
