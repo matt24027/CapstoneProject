@@ -260,10 +260,10 @@ a:before, a:after {
 }
 
 #headerwrap h2 {
-    color: rgb(100, 94, 94);
+    color: rgb(73, 69, 69);
     background-color: #e89a2f; /* Full-width background */
     padding: 10px; /* Adds space around the text */
-    font-size: 30px;
+    font-size: 20px;
     font-weight: 400;
     text-align: center;
     letter-spacing: 3px;
